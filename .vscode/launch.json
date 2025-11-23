@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/tanmayeesc/Documents/comsc210_lab_34",
+      "program": "/Users/tanmayeesc/Documents/comsc210_lab_34/build/Debug/outDebug"
+    }
+  ]
+}
