@@ -1,6 +1,8 @@
 // COMSC210 | Lab 34 | Tanmayee Chalamalasetti
 // IDE Used: VS Code
+// LLM Used: ChatGPT
 
+#include <functional>
 #include <iostream>
 #include <limits>
 #include <queue>
@@ -197,6 +199,51 @@ class Graph {
     }
   }
 
+  void minimumSpanningTree() {
+    int n = adjList.size();
+    const int INF = numeric_limits<int>::max();
+
+    vector<int> key(n, INF);       // smallest edge weight to connect each node
+    vector<int> parent(n, -1);     // parent of each node in the MST
+    vector<bool> inMST(n, false);  // whether the node is already in MST
+
+    using PII = pair<int, int>;
+    priority_queue<PII, vector<PII>, greater<PII>> pq;
+
+    int start = 0;
+    key[start] = 0;
+    pq.push({0, start});
+
+    while (!pq.empty()) {
+      auto [k, u] = pq.top();
+      pq.pop();
+
+      if (inMST[u]) continue;
+      inMST[u] = true;
+
+      // check all neighbors of u
+      for (Pair edge : adjList[u]) {
+        int v = edge.first;
+        int w = edge.second;
+
+        // if v is not in MST and this edge is better than current best
+        if (!inMST[v] && w < key[v]) {
+          key[v] = w;
+          parent[v] = u;
+          pq.push({key[v], v});
+        }
+      }
+    }
+
+    cout << "\nMinimum Spanning Tree edges:\n";
+    for (int v = 0; v < n; v++) {
+      if (parent[v] != -1) {
+        cout << "Edge from " << parent[v] << " to " << v
+             << " with travel time: " << key[v] << " minutes\n";
+      }
+    }
+  }
+
  private:
   // DFS helper
   void dfsUtil(int v, vector<bool>& visited) {
@@ -234,6 +281,8 @@ int main() {
 
   // Step 4: shortest paths from node 0
   graph.shortestPath(0);
+
+  graph.minimumSpanningTree();
 
   return 0;
 }
