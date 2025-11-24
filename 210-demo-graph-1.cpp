@@ -20,6 +20,11 @@ class Graph {
   // a vector of vectors of Pairs to represent an adjacency list
   vector<vector<Pair>> adjList;
 
+  vector<string> stationNames = {
+      "Central Hub",       "Downtown Station",  "University Station",
+      "Museum Station",    "City Park Station", "Airport Station",
+      "Tech Park Station", "Suburbia Station",  "Stadium Station"};
+
   // Graph Constructor
   Graph(vector<Edge> const& edges) {
     // resize the vector to hold SIZE elements of type vector<Edge>
@@ -83,6 +88,72 @@ class Graph {
     cout << endl;
   }
 
+  void printMetroNetwork() {
+    cout << "\nCity Metro Network Topology:\n";
+    cout << "============================\n";
+
+    for (int i = 0; i < adjList.size(); i++) {
+      cout << "Station " << i << " (" << stationNames[i] << ") connects to:\n";
+      for (Pair edge : adjList[i]) {
+        cout << "  → Station " << edge.first << " (" << stationNames[edge.first]
+             << ") - Travel time: " << edge.second << " minutes\n";
+      }
+    }
+  }
+
+  void runDFSInspection(int start) {
+    vector<bool> visited(adjList.size(), false);
+    cout << "\nMetro Route Inspection (DFS):\n";
+    cout << "=============================\n";
+    dfsInspectionUtil(start, visited);
+  }
+
+  void dfsInspectionUtil(int v, vector<bool>& visited) {
+    visited[v] = true;
+    cout << "Inspecting Station " << v << " (" << stationNames[v] << ")\n";
+
+    for (Pair edge : adjList[v]) {
+      int next = edge.first;
+      int travelTime = edge.second;
+      if (!visited[next]) {
+        cout << "  → Next stop: Station " << next << " (" << stationNames[next]
+             << ") - Travel time: " << travelTime << " minutes\n";
+        dfsInspectionUtil(next, visited);
+      }
+    }
+  }
+
+  void runBFSCoverage(int start) {
+    vector<bool> visited(adjList.size(), false);
+    queue<int> q;
+
+    visited[start] = true;
+    q.push(start);
+
+    cout << "\nMetro Coverage Analysis (BFS):\n";
+    cout << "===============================\n";
+
+    while (!q.empty()) {
+      int v = q.front();
+      q.pop();
+
+      cout << "Checking Station " << v << " (" << stationNames[v] << ")\n";
+
+      for (Pair edge : adjList[v]) {
+        int next = edge.first;
+        int travelTime = edge.second;
+
+        if (!visited[next]) {
+          visited[next] = true;
+          q.push(next);
+          cout << "  → Reachable next: Station " << next << " ("
+               << stationNames[next] << ") - Travel time: " << travelTime
+               << " minutes\n";
+        }
+      }
+    }
+  }
+
  private:
   // DFS helper
   void dfsUtil(int v, vector<bool>& visited) {
@@ -113,6 +184,10 @@ int main() {
 
   graph.dfs(0);
   graph.bfs(0);
+
+  graph.printMetroNetwork();
+  graph.runDFSInspection(0);
+  graph.runBFSCoverage(0);
 
   return 0;
 }
