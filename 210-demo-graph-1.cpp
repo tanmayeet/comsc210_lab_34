@@ -1,5 +1,6 @@
 // COMSC210 | Lab 34 | Tanmayee Chalamalasetti
 // IDE Used: VS Code
+// LLM Used: ChatGPT
 
 #include <functional>
 #include <iostream>
@@ -268,12 +269,10 @@ int main() {
   // Creates graph
   Graph graph(edges);
 
-  // Step 6
-
   int choice = -1;
 
   while (choice != 0) {
-    cout << "nCity Metro Network Menu: \n";
+    cout << "\nCity Metro Network Menu: \n";
     cout << "[1] Display metro network\n";
     cout << "[2] Check coverage (BFS)\n";
     cout << "[3] Plan inspection route (DFS)\n";
@@ -282,8 +281,31 @@ int main() {
     cout << "[0] Exit\n";
     cout << "Enter your choice: ";
     cin >> choice;
-  }
 
+    switch (choice) {
+      case 1:
+        graph.printMetroNetwork();
+        break;
+      case 2:
+        graph.runBFSCoverage(0);  // start from Central Hub (0)
+        break;
+      case 3:
+        graph.runDFSInspection(0);  // start from Central Hub (0)
+        break;
+      case 4:
+        graph.shortestPath(0);
+        break;
+      case 5:
+        graph.minimumSpanningTree();
+        break;
+      case 0:
+        cout << "Exiting program...\n";
+        break;
+      default:
+        cout << "Invalid choice. Please try again.\n";
+        break;
+    }
+  }
   // Prints adjacency list representation of graph
   graph.printGraph();
 
