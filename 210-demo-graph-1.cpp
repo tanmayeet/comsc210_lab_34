@@ -171,8 +171,11 @@ class Graph {
     pq.push({0, start});
 
     while (!pq.empty()) {
-      auto [d, u] = pq.top();
+      PII top = pq.top();
       pq.pop();
+
+      int d = top.first;
+      int u = top.second;
 
       // skip if we already found a better path
       if (d > dist[u]) continue;
@@ -184,7 +187,7 @@ class Graph {
 
         if (dist[u] != INF && dist[u] + w < dist[v]) {
           dist[v] = dist[u] + w;
-          pq.push({dist[v], v});
+          pq.push(PII(dist[v], v));
         }
       }
     }
@@ -215,8 +218,11 @@ class Graph {
     pq.push({0, start});
 
     while (!pq.empty()) {
-      auto [k, u] = pq.top();
+      PII top = pq.top();
       pq.pop();
+
+      int k = top.first;
+      int u = top.second;
 
       if (inMST[u]) continue;
       inMST[u] = true;
@@ -230,7 +236,7 @@ class Graph {
         if (!inMST[v] && w < key[v]) {
           key[v] = w;
           parent[v] = u;
-          pq.push({key[v], v});
+          pq.push(PII(key[v], v));
         }
       }
     }
