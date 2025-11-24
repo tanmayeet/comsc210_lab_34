@@ -2,8 +2,8 @@
 // IDE Used: VS Code
 
 #include <iostream>
-#include <vector>
 #include <queue>
+#include <vector>
 using namespace std;
 
 const int SIZE = 7;
@@ -48,6 +48,54 @@ class Graph {
       cout << endl;
     }
   }
+
+  // DFS
+  void dfs(int start) {
+    vector<bool> visited(adjList.size(), false);
+    cout << "DFS starting from vertex " << start << ":" << endl;
+    dfsUtil(start, visited);
+    cout << endl;
+  }
+
+  // BFS
+  void bfs(int start) {
+    vector<bool> visited(adjList.size(), false);
+    queue<int> q;
+
+    visited[start] = true;
+    q.push(start);
+
+    cout << "BFS starting from vertex " << start << ":" << endl;
+
+    while (!q.empty()) {
+      int v = q.front();
+      q.pop();
+      cout << v << " ";
+
+      for (Pair neighbor : adjList[v]) {
+        int next = neighbor.first;
+        if (!visited[next]) {
+          visited[next] = true;
+          q.push(next);
+        }
+      }
+    }
+    cout << endl;
+  }
+
+ private:
+  // DFS helper
+  void dfsUtil(int v, vector<bool>& visited) {
+    visited[v] = true;
+    cout << v << " ";
+
+    for (Pair neighbor : adjList[v]) {
+      int next = neighbor.first;
+      if (!visited[next]) {
+        dfsUtil(next, visited);
+      }
+    }
+  }
 };
 
 int main() {
@@ -61,6 +109,9 @@ int main() {
 
   // Prints adjacency list representation of graph
   graph.printGraph();
+
+  graph.dfs(0);
+  graph.bfs(0);
 
   return 0;
 }
