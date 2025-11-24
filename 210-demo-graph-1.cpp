@@ -2,6 +2,7 @@
 // IDE Used: VS Code
 
 #include <iostream>
+#include <limits>
 #include <queue>
 #include <vector>
 using namespace std;
@@ -154,6 +155,48 @@ class Graph {
     }
   }
 
+  void shortestPath(int start) {
+    int n = adjList.size();
+    const int INF = numeric_limits<int>::max();
+
+    // distance from start to each node
+    vector<int> dist(n, INF);
+    dist[start] = 0;
+
+    // min-heap priority queue: (distance, vertex)
+    using PII = pair<int, int>;
+    priority_queue<PII, vector<PII>, greater<PII>> pq;
+    pq.push({0, start});
+
+    while (!pq.empty()) {
+      auto [d, u] = pq.top();
+      pq.pop();
+
+      // skip if we already found a better path
+      if (d > dist[u]) continue;
+
+      // relax edges
+      for (Pair edge : adjList[u]) {
+        int v = edge.first;
+        int w = edge.second;
+
+        if (dist[u] != INF && dist[u] + w < dist[v]) {
+          dist[v] = dist[u] + w;
+          pq.push({dist[v], v});
+        }
+      }
+    }
+
+    cout << "\nShortest path from node " << start << ":\n";
+    for (int i = 0; i < n; i++) {
+      if (dist[i] == INF) {
+        cout << start << " -> " << i << " : unreachable\n";
+      } else {
+        cout << start << " -> " << i << " : " << dist[i] << "\n";
+      }
+    }
+  }
+
  private:
   // DFS helper
   void dfsUtil(int v, vector<bool>& visited) {
@@ -188,6 +231,9 @@ int main() {
   graph.printMetroNetwork();
   graph.runDFSInspection(0);
   graph.runBFSCoverage(0);
+
+  // Step 4: shortest paths from node 0
+  graph.shortestPath(0);
 
   return 0;
 }
